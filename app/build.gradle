@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+
+android {
+
+    flavorDimensions "default"
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.example.anil.dagger2sample"
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        DEV {
+            dimension "default"
+            buildConfigField 'String', 'BASE_URL', '"http://52.5.205.129:3001/"'
+            buildConfigField 'boolean', 'WATER_MARK', 'true'
+            buildConfigField 'boolean', 'IS_UNIVERSAL', 'false'
+            buildConfigField 'String', 'BUILD_SERVER_TYPE', '"Dev"'
+            versionNameSuffix "-DEV"
+            tasks.whenTaskAdded { task ->
+                if (task.name == 'assembleDEVDebug')
+                    task.dependsOn('test')
+            }
+
+        }
+
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    implementation 'com.google.dagger:dagger-android:2.13'
+    implementation 'com.google.dagger:dagger-android-support:2.13'
+    // if you use the support libraries
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.13'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.13'
+
+    /**
+     *
+     * Retrofit dependencies
+     */
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+}
